@@ -1,12 +1,11 @@
-
 package tp3;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
-
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -21,13 +20,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Fenêtre principale du gestionnaire de menu
+ * 
+ */
 public class FenetrePrincipale extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
     private JPanel contentPane;
-
-    // Tableau
     private ArrayList<Item> menu = new ArrayList<>();
 
     // Composants
@@ -36,7 +37,6 @@ public class FenetrePrincipale extends JFrame {
     private JTextField txtCalories;
     private JTextField txtPartager;
     private JTextField txtSelection;
-
     private JTextArea textAreaMenu;
 
     private JComboBox<Categorie> cbChoix;
@@ -44,289 +44,275 @@ public class FenetrePrincipale extends JFrame {
 
     private JCheckBox chckbxSauce;
     private JCheckBox chckbxFromage;
+    private JCheckBox chckbxFlambe;
+    private JCheckBox chckbxChaud;
 
     private JButton btnAjouter;
     private JButton btnEffacer;
     private JButton btnVider;
 
     public static void main(String[] args) {
-
         FenetrePrincipale frame = new FenetrePrincipale();
         frame.setVisible(true);
     }
 
     public FenetrePrincipale() {
-
-        setTitle("Gestionnaire de menu");
+        setTitle("Gestionnaire de menu du Resto Ahuntsic par NOM Prénom"); // ← Mets tes noms
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 950, 600);
+        setBounds(100, 100, 980, 620);
 
+        // ==================== MENU BAR ====================
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
+        // Menu Fichier
         JMenu mnFichier = new JMenu("Fichier");
         menuBar.add(mnFichier);
+        JMenuItem mntmLire = new JMenuItem("Lire les données");
+        JMenuItem mntmEcrire = new JMenuItem("Écrire les données");
+        JMenuItem mntmQuitter = new JMenuItem("Sortir");
+        mnFichier.add(mntmLire);
+        mnFichier.add(mntmEcrire);
+        mnFichier.addSeparator();
+        mnFichier.add(mntmQuitter);
 
-        JMenuItem mnQuitter = new JMenuItem("Quitter");
-        mnFichier.add(mnQuitter);
+        // Menu Menu
+        JMenu mnMenu = new JMenu("Menu");
+        menuBar.add(mnMenu);
+        JMenuItem mntmProduire = new JMenuItem("Produire le menu");
+        mnMenu.add(mntmProduire);
 
-        mnQuitter.addActionListener(e -> System.exit(0));
+        // Menu Sécurité
+        JMenu mnSecurite = new JMenu("Sécurité");
+        menuBar.add(mnSecurite);
+        JMenuItem mntmChangerMDP = new JMenuItem("Changer le mot de passe");
+        mnSecurite.add(mntmChangerMDP);
 
+        // Actions Menu
+        mntmQuitter.addActionListener(e -> System.exit(0));
+
+        // ==================== CONTENT PANE ====================
         contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
         // Description
         JLabel lblDescription = new JLabel("Description");
         lblDescription.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblDescription.setBounds(10, 20, 100, 25);
+        lblDescription.setBounds(20, 20, 100, 25);
         contentPane.add(lblDescription);
 
         txtDescription = new JTextField();
-        txtDescription.setBounds(120, 20, 200, 25);
+        txtDescription.setBounds(130, 20, 250, 25);
         contentPane.add(txtDescription);
 
-        // Categorie
+        // Catégorie
         cbChoix = new JComboBox<>(Categorie.values());
-        cbChoix.setBounds(10, 70, 120, 25);
+        cbChoix.setBounds(20, 70, 130, 25);
         contentPane.add(cbChoix);
 
         // Prix
         JLabel lblPrix = new JLabel("Prix");
-        lblPrix.setBounds(150, 70, 50, 25);
+        lblPrix.setBounds(170, 70, 50, 25);
         contentPane.add(lblPrix);
 
         txtPrix = new JTextField();
-        txtPrix.setBounds(200, 70, 100, 25);
+        txtPrix.setBounds(220, 70, 100, 25);
         contentPane.add(txtPrix);
 
-        // Calorie
+        // Calories
         JLabel lblCalories = new JLabel("Calories");
-        lblCalories.setBounds(320, 70, 70, 25);
+        lblCalories.setBounds(340, 70, 70, 25);
         contentPane.add(lblCalories);
 
         txtCalories = new JTextField();
-        txtCalories.setBounds(390, 70, 100, 25);
+        txtCalories.setBounds(410, 70, 100, 25);
         contentPane.add(txtCalories);
 
-        // Partage
-        JLabel lblPartager = new JLabel("Partager");
-        lblPartager.setBounds(10, 120, 80, 25);
+        // Champs dynamiques
+        JLabel lblPartager = new JLabel("À partager?");
+        lblPartager.setBounds(20, 120, 100, 25);
         contentPane.add(lblPartager);
 
         txtPartager = new JTextField();
-        txtPartager.setBounds(100, 120, 60, 25);
+        txtPartager.setBounds(130, 120, 60, 25);
         contentPane.add(txtPartager);
 
-        // Checkbox
+        cbFormat = new JComboBox<>(Format.values());
+        cbFormat.setBounds(220, 120, 130, 25);
+        contentPane.add(cbFormat);
+
         chckbxSauce = new JCheckBox("Extra sauce");
-        chckbxSauce.setBounds(200, 120, 120, 25);
+        chckbxSauce.setBounds(380, 120, 130, 25);
         contentPane.add(chckbxSauce);
 
         chckbxFromage = new JCheckBox("Extra fromage");
-        chckbxFromage.setBounds(330, 120, 150, 25);
+        chckbxFromage.setBounds(520, 120, 150, 25);
         contentPane.add(chckbxFromage);
 
-        // Format
-        cbFormat = new JComboBox<>(Format.values());
-        cbFormat.setBounds(500, 120, 100, 25);
-        contentPane.add(cbFormat);
+        chckbxFlambe = new JCheckBox("Flambé");
+        chckbxFlambe.setBounds(380, 120, 100, 25);
+        contentPane.add(chckbxFlambe);
 
-        // Ajoute
-        btnAjouter = new JButton("Ajouter");
-        btnAjouter.setBounds(120, 180, 150, 35);
+        chckbxChaud = new JCheckBox("Chaud");
+        chckbxChaud.setBounds(500, 120, 100, 25);
+        contentPane.add(chckbxChaud);
+
+        // Boutons
+        btnAjouter = new JButton("Ajouter au menu");
+        btnAjouter.setBounds(150, 180, 160, 40);
         contentPane.add(btnAjouter);
 
-        // Text area
-        textAreaMenu = new JTextArea();
-        textAreaMenu.setBounds(520, 20, 380, 500);
-        contentPane.add(textAreaMenu);
-
-        // Selectionne
         txtSelection = new JTextField();
-        txtSelection.setBounds(50, 300, 80, 30);
+        txtSelection.setBounds(50, 280, 80, 35);
         contentPane.add(txtSelection);
 
-        // Efface
         btnEffacer = new JButton("Effacer");
-        btnEffacer.setBounds(150, 300, 120, 30);
+        btnEffacer.setBounds(150, 280, 120, 35);
         contentPane.add(btnEffacer);
 
-        // Vide
         btnVider = new JButton("Vider");
-        btnVider.setBounds(300, 300, 120, 30);
+        btnVider.setBounds(290, 280, 120, 35);
         contentPane.add(btnVider);
 
-        // Actions
+        // Zone de texte menu
+        textAreaMenu = new JTextArea();
+        textAreaMenu.setBounds(520, 20, 420, 500);
+        contentPane.add(textAreaMenu);
+
+        // ==================== LISTENERS ====================
+        cbChoix.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    afficherChampsSelonCategorie();
+                }
+            }
+        });
+
         btnAjouter.addActionListener(new BtnAjouterActionListener());
         btnEffacer.addActionListener(new BtnEffacerActionListener());
         btnVider.addActionListener(new BtnViderActionListener());
+
+        // Affichage initial
+        afficherChampsSelonCategorie();
     }
 
-    // Ajouter
-    private class BtnAjouterActionListener implements ActionListener {
+    /**
+     * Affiche / masque les champs selon la catégorie sélectionnée
+     */
+    private void afficherChampsSelonCategorie() {
+        Categorie cat = (Categorie) cbChoix.getSelectedItem();
 
+        // Réinitialiser visibilité
+        txtPartager.setVisible(false);
+        cbFormat.setVisible(false);
+        chckbxSauce.setVisible(false);
+        chckbxFromage.setVisible(false);
+        chckbxFlambe.setVisible(false);
+        chckbxChaud.setVisible(false);
+
+        if (cat == Categorie.Entree) {
+            txtPartager.setVisible(true);
+            cbFormat.setVisible(true);
+        } 
+        else if (cat == Categorie.Repas) {
+            txtPartager.setVisible(true);
+            chckbxSauce.setVisible(true);
+            chckbxFromage.setVisible(true);
+        } 
+        else if (cat == Categorie.Dessert) {
+            chckbxFlambe.setVisible(true);
+            chckbxChaud.setVisible(true);
+        }
+    }
+
+    // ==================== CLASSES INTERNES (Actions) ====================
+    private class BtnAjouterActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             try {
-
-                String description = txtDescription.getText();
-                double prix = Double.parseDouble(txtPrix.getText());
-                int calories = Integer.parseInt(txtCalories.getText());
-
-                // VALIDATION
-                if (description.isBlank()) {
-                    JOptionPane.showMessageDialog(null,
-                            "Description invalide");
+                String description = txtDescription.getText().trim();
+                if (description.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Description obligatoire !");
                     return;
                 }
 
-                Categorie categorie =
-                        (Categorie) cbChoix.getSelectedItem();
+                double prix = Double.parseDouble(txtPrix.getText().trim());
+                int calories = Integer.parseInt(txtCalories.getText().trim());
+                Categorie categorie = (Categorie) cbChoix.getSelectedItem();
 
                 Item item = null;
 
                 switch (categorie) {
+                    case Entree:
+                        int portions = Integer.parseInt(txtPartager.getText().trim());
+                        Format format = (Format) cbFormat.getSelectedItem();
+                        item = new Entree(description, prix, calories, portions, format);
+                        break;
 
-                case Entree:
+                    case Repas:
+                        int partage = Integer.parseInt(txtPartager.getText().trim());
+                        item = new Repas(description, prix, calories, partage,
+                                chckbxSauce.isSelected(), chckbxFromage.isSelected());
+                        break;
 
-                    int portions =
-                            Integer.parseInt(txtPartager.getText());
-
-                    Format format =
-                            (Format) cbFormat.getSelectedItem();
-
-                    item = new Entree(
-                            description,
-                            prix,
-                            calories,
-                            portions,
-                            format);
-
-                    break;
-
-                case Repas:
-
-                    int partage =
-                            Integer.parseInt(txtPartager.getText());
-
-                    boolean sauce =
-                            chckbxSauce.isSelected();
-
-                    boolean fromage =
-                            chckbxFromage.isSelected();
-
-                    item = new Repas(
-                            description,
-                            prix,
-                            calories,
-                            partage,
-                            sauce,
-                            fromage);
-
-                    break;
-
-                case Dessert:
-
-                    boolean chaud =
-                            chckbxFromage.isSelected();
-
-                    boolean flambe =
-                            chckbxSauce.isSelected();
-
-                    item = new Dessert(
-                            description,
-                            prix,
-                            calories,
-                            chaud,
-                            flambe);
-
-                    break;
+                    case Dessert:
+                        item = new Dessert(description, prix, calories,
+                                chckbxChaud.isSelected(), chckbxFlambe.isSelected());
+                        break;
                 }
 
-                // arraylist
                 menu.add(item);
-
-                // Affiche
                 afficherMenu();
-
                 viderChamps();
 
             } catch (Exception ex) {
-
-                JOptionPane.showMessageDialog(null,
-                        "Erreur dans les données");
+                JOptionPane.showMessageDialog(null, "Erreur : Vérifiez vos données numériques.");
             }
         }
     }
 
-    // Efface
-    private class BtnEffacerActionListener
-            implements ActionListener {
-
+    private class BtnEffacerActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             try {
-
-                int position =
-                        Integer.parseInt(txtSelection.getText());
-
-                position--;
-
-                if(position >= 0 && position < menu.size()) {
-
-                    menu.remove(position);
+                int pos = Integer.parseInt(txtSelection.getText().trim()) - 1;
+                if (pos >= 0 && pos < menu.size()) {
+                    menu.remove(pos);
                     afficherMenu();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Position invalide");
                 }
-
             } catch (Exception ex) {
-
-                JOptionPane.showMessageDialog(null,
-                        "Position invalide");
+                JOptionPane.showMessageDialog(null, "Position invalide");
             }
         }
     }
 
-    // Vide
-    private class BtnViderActionListener
-            implements ActionListener {
-
+    private class BtnViderActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             menu.clear();
             afficherMenu();
         }
     }
 
-    // affiche menu
     public void afficherMenu() {
-
         textAreaMenu.setText("");
-
-        int compteur = 1;
-
-        for(Item item : menu) {
-
-            textAreaMenu.append(
-                    compteur + " - " + item + "\n");
-
-            compteur++;
+        for (int i = 0; i < menu.size(); i++) {
+            textAreaMenu.append((i + 1) + " - " + menu.get(i) + "\n");
         }
     }
 
-    // Vide les champs
-    public void viderChamps() {
-
+    private void viderChamps() {
         txtDescription.setText("");
         txtPrix.setText("");
         txtCalories.setText("");
         txtPartager.setText("");
-
         chckbxSauce.setSelected(false);
         chckbxFromage.setSelected(false);
+        chckbxFlambe.setSelected(false);
+        chckbxChaud.setSelected(false);
     }
 }
